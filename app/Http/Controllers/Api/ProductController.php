@@ -57,10 +57,14 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::FindOrFail($id);
-        if ($product->image) {
-            Storage::url($product->image);
-        }
+        $product = Product::with('category', 'supplier')->findOrFail($id);
+        // if ($product->image) {
+        //     Storage::url($product->image);
+        // }
+        $product['image'] = Storage::url($product->image);
+        // foreach ($product as $key => $value) {
+        //     $product[$key]['image'] = Storage::url($value['image']);
+        // }
         return response()->json([
             'data' => $product
         ]);
@@ -74,10 +78,12 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product  = Product::FindOrFail($id);
+        $product  = Product::findOrFail($id);
         if ($product->image) {
             Storage::url($product->image);
         }
+        $product['image'] = Storage::url($product->image);
+
         return response()->json([
             'data' => $product
         ]);
